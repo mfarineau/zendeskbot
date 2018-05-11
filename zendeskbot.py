@@ -7,11 +7,11 @@ email = '{redacted}'
 # Enter your Zendesk token:
 token = '{redacted}'
 
-# Enter the view you are connecting to:
-view = '{redacted}'
+# Enter the zendesk API url
+url = '{redacted}'
 
 # Build out the zendesk api connection with user creds and ask zendesk for view data:
-response = requests.get('https://acquia.zendesk.com/api/v2/views/' + view + '/tickets.json',
+response = requests.get(url + '/views/' + view + '/tickets.json',
                         auth=(email + '/token', token))
 
 # Store data in json in data variable:
