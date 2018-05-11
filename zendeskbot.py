@@ -7,10 +7,13 @@ email = '{redacted}'
 # Enter your Zendesk token:
 token = '{redacted}'
 
-# Enter the zendesk API url
+# Enter the view you are connecting to:
+view = '{redacted}'
+
+# Enter the Zendesk API url
 url = '{redacted}'
 
-# Build out the zendesk api connection with user creds and ask zendesk for view data:
+# Build out the Zendesk api connection with user creds and ask zendesk for view data:
 response = requests.get(url + '/views/' + view + '/tickets.json',
                         auth=(email + '/token', token))
 
@@ -40,4 +43,4 @@ while i < numberoftickets:
 
 # the below dumps all the data in a readable format
 # print("Break")
-# pprint.pprint(data) 
+# pprint.pprint(data)
