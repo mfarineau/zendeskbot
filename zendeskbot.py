@@ -1,5 +1,15 @@
 import requests
 import pprint
+import time
+import signal
+imrpot scrollphathd
+from scrollphathd.fonts import font 3x5
+
+scrollphathd.rotate(degrees=180)
+
+####################
+# Define Variables #
+####################
 
 # Enter your Zendesk email:
 email = '{redacted}'
@@ -13,34 +23,54 @@ view = '{redacted}'
 # Enter the Zendesk API url
 url = '{redacted}'
 
-# Build out the Zendesk api connection with user creds and ask zendesk for view data:
-response = requests.get(url + '/views/' + view + '/tickets.json',
-                        auth=(email + '/token', token))
+# Polling interval (seconds). Zendesk rate limits: https://developer.zendesk.com/rest_api/docs/core/introduction#rate-limits
+poll_interval = 10
 
-# Store data in json in data variable:
-data = response.json()
+# define global variable "data" for use in "GetResponse" function
+data = 'null'
 
-# extracting number of tickets from data:
-numberoftickets = data[u'count']
+##################
+# api connection #
+##################
 
-# print the number of tickets in the queue
-print('Number of ticket in the queue: %s' % numberoftickets)
+# Build out the zendesk api connection with user creds and ask zendesk for view data:
+def GetResponse():
 
-print('Ticket IDs in queue:')
+    response = requests.get(url + '/views/' + view + '/tickets.json',
+                            auth=(email + '/token', token))
 
-# extracting zendesk IDs for tickets (the [0] grabs the first ticket ID, [1] would grab the next and so on)
-#ticketids = data[u'tickets'][0][u'id']
+    # Store data in json format in global data variable:
+    global data
+    data = response.json()
 
-# setup a loop to iterate through open tickets and print them
-i = 0
-while i < numberoftickets:
-    print(data[u'tickets'][i][u'id'])
-    i += 1
+###################
+# Print data loop #
+###################
 
-# printing the first open ticket - need to figure out how to iterate through these
-#print("The ID of the first open ticket:")
-#print(ticketids)
+while True:
 
-# the below dumps all the data in a readable format
-# print("Break")
-# pprint.pprint(data)
+    # Call the "GetResponse" function to pull data from Zendesk
+    GetResponse()
+
+    # extracting number of tickets from data:
+    numberoftickets = data[u'count']
+
+    # check if there are tickets in the queue. If there are none, print "No crits!"
+    if numberoftickets <= 0:
+        print('No crits!')
+        scrollphathd.write_string('No crits!')
+
+    # if there are tickets in the queue, print the number
+    if numberoftickets > 0:
+        print('Crits: %s' % numberoftickets)
+        scrollphathd.write_string('Crits: %s' % numberoftickets)
+
+    # setup a loop to iterate through open tickets and print them when there are tickets to print
+    i = 0
+    while i < numberoftickets:
+        print(data[u'tickets'][i][u'id'])
+        i += 1
+
+    # set a timeout based on global poll_interval
+    global poll_interval
+    time.sleep(poll_interval)
