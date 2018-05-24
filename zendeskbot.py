@@ -1,11 +1,6 @@
 import requests
 import pprint
 import time
-import signal
-imrpot scrollphathd
-from scrollphathd.fonts import font 3x5
-
-scrollphathd.rotate(degrees=180)
 
 ####################
 # Define Variables #
@@ -55,15 +50,7 @@ while True:
     # extracting number of tickets from data:
     numberoftickets = data[u'count']
 
-    # check if there are tickets in the queue. If there are none, print "No crits!"
-    if numberoftickets <= 0:
-        print('No crits!')
-        scrollphathd.write_string('No crits!')
-
-    # if there are tickets in the queue, print the number
-    if numberoftickets > 0:
-        print('Crits: %s' % numberoftickets)
-        scrollphathd.write_string('Crits: %s' % numberoftickets)
+    print numberoftickets, "tickets"
 
     # setup a loop to iterate through open tickets and print them when there are tickets to print
     i = 0
@@ -72,5 +59,4 @@ while True:
         i += 1
 
     # set a timeout based on global poll_interval
-    global poll_interval
     time.sleep(poll_interval)
