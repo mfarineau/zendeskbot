@@ -24,24 +24,37 @@ poll_interval = 10
 # define global variable "data" for use in "GetResponse" function
 data = 'null'
 
+# define a global array to store ticket ids
+ticketids = []
+
 ##################
 # api connection #
 ##################
 
-# Build out the zendesk api connection with user creds and ask zendesk for view data:
+# Create a function to connect to the Zendesk api, get data and store it in a global variable
 def GetResponse():
 
-    response = requests.get(url + '/views/' + view + '/tickets.json',
-                            auth=(email + '/token', token))
+    # Build out the zendesk api connection with user creds and ask zendesk for view data:
+    response = requests.get(url + '/views/' + view + '/tickets.json', auth=(email + '/token', token))
 
-    # Store data in json format in global data variable:
+    # grab global variable
     global data
+
+    # Store data in json format in global variable:
     data = response.json()
 
-###################
-# Print data loop #
-###################
+    # set a timeout based on global poll_interval
+    time.sleep(poll_interval)
 
+########################
+# Parse and Print loop #
+########################
+
+# Create a loop that:
+#   - gets data from a global variable
+#   - examines data to grab:
+#       - number of tickets in the view
+#       - ticket numbers
 while True:
 
     # Call the "GetResponse" function to pull data from Zendesk
@@ -50,13 +63,39 @@ while True:
     # extracting number of tickets from data:
     numberoftickets = data[u'count']
 
-    print numberoftickets, "tickets"
+    # extracting zendesk IDs for tickets (the [0] grabs the first ticket ID, [1] would grab the next and so on)
+    # ticketids = data[u'tickets'][0][u'id']
 
     # setup a loop to iterate through open tickets and print them when there are tickets to print
     i = 0
+
+    # while i is less than the number of tickets in the view
     while i < numberoftickets:
-        print(data[u'tickets'][i][u'id'])
+
+        # add tickets to ticketids array
+        # zendesk IDs for tickets ([0] is the first ticket, [1] would grab the next and so on)
+        ticketids.append(data[u'tickets'][i][u'id'])
+
+        # increase value of i by 1
         i += 1
 
-    # set a timeout based on global poll_interval
-    time.sleep(poll_interval)
+    # print out number of tickers
+    print numberoftickets, "tickets"
+
+    # iterate through  ticketids array
+    for x in range(len(ticketids)):
+
+        # print each ticket id in the array
+        print ticketids[x],
+
+    # empty contents of ticketids array
+    print '\n'
+    ticketids = []
+
+# printing the first open ticket - need to figure out how to iterate through these
+#print("The ID of the first open ticket:")
+#print(ticketids)
+
+# the below dumps all the data in a readable format
+# print("Break")
+# pprint.pprint(data)
