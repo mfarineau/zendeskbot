@@ -43,9 +43,6 @@ def GetResponse():
     # Store data in json format in global variable:
     data = response.json()
 
-    # set a timeout based on global poll_interval
-    time.sleep(poll_interval)
-
 ########################
 # Parse and Print loop #
 ########################
@@ -92,10 +89,5 @@ while True:
     print '\n'
     ticketids = []
 
-# printing the first open ticket - need to figure out how to iterate through these
-#print("The ID of the first open ticket:")
-#print(ticketids)
-
-# the below dumps all the data in a readable format
-# print("Break")
-# pprint.pprint(data)
+    # sleep for duration of global poll_interval variable to throttle api access rate
+    time.sleep(poll_interval)
