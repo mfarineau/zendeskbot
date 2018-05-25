@@ -33,6 +33,9 @@ data = 'null'
 # define a global array to store ticket ids
 ticketids = []
 
+# set a variable to ensure the autoscroll function is only called once
+scroll_limit = 0
+
 ##################
 # api connection #
 ##################
@@ -51,7 +54,7 @@ def GetResponse():
     time.sleep(poll_interval)
     PrintParse()
 
-def autoscroll(interval=0.1):
+def autoscroll(interval=0.05):
     threading.Timer(interval, autoscroll, [interval]).start()
     scrollphathd.show()
     scrollphathd.scroll()
@@ -122,16 +125,21 @@ while True:
     numberoftickets_string = str(numberoftickets)
 
     # Combine numberoftickets_string and ticketids_string plus text into output variable
-    output = '  Tickets in view: ' + numberoftickets_string + ' Ticket ids: ' + ticketids_string
+    output = '  Tickets: ' + numberoftickets_string + ' IDs: ' + ticketids_string
 
     # Clear the pi output
     scrollphathd.clear()
 
-    # Write output string to the pi buffer
-    scrollphathd.write_string(output, brightness=0.5)
+    # Watch a queue - if its empty do nothing. If there more than one ticket, output to led screen
+    if numberoftickets > 0:
 
-    # Call the autoscroll function that will send the pi buffer to the led screen
-    autoscroll()
+        # Write output string to the pi buffer
+        scrollphathd.write_string(output, font=font3x5, y=1, brightness=0.5)
+
+    # Call the autoscroll function that will send the pi buffer to the led screen, but make sure it only runs once
+    while scroll_limit < 1:
+        autoscroll()
+        scroll_limit += 1
 
     # Sleep for duration of poll_interval to rate limit api access
     time.sleep(poll_interval)
