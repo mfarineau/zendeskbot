@@ -1,6 +1,12 @@
+#!/usr/bin/env python
 import requests
 import pprint
 import time
+import threading
+import scrollphathd
+from scrollphathd.fonts import font3x5
+
+scrollphathd.rotate(degrees=180)
 
 ####################
 # Define Variables #
@@ -42,6 +48,13 @@ def GetResponse():
 
     # Store data in json format in global variable:
     data = response.json()
+    time.sleep(poll_interval)
+    PrintParse()
+
+def autoscroll(interval=0.1):
+    threading.Timer(interval, autoscroll, [interval]).start()
+    scrollphathd.show()
+    scrollphathd.scroll()
 
 ########################
 # Parse and Print loop #
@@ -52,12 +65,14 @@ def GetResponse():
 #   - examines data to grab:
 #       - number of tickets in the view
 #       - ticket numbers
-while True:
+
+def PrintParse():
 
     # Call the "GetResponse" function to pull data from Zendesk
-    GetResponse()
+    #GetResponse()
 
     # extracting number of tickets from data:
+    global numberoftickets
     numberoftickets = data[u'count']
 
     # extracting zendesk IDs for tickets (the [0] grabs the first ticket ID, [1] would grab the next and so on)
@@ -77,7 +92,7 @@ while True:
         i += 1
 
     # print out number of tickers
-    print numberoftickets, "tickets"
+    print numberoftickets, 'tickets'
 
     # iterate through  ticketids array
     for x in range(len(ticketids)):
@@ -87,7 +102,36 @@ while True:
 
     # empty contents of ticketids array
     print '\n'
+    #ticketids = []
+    return numberoftickets
+    # sleep for duration of global poll_interval variable to throttle api access rate
+    #time.sleep(poll_interval)
+
+# Setup a continuous loop
+while True:
+    # empty the ticket id array
     ticketids = []
 
-    # sleep for duration of global poll_interval variable to throttle api access rate
+    # Call the Get Reponse function
+    GetResponse()
+
+    # Convert ticketids array to string and comma separate values
+    ticketids_string = str(ticketids).strip('[]')
+
+    # Convert numberoftickets int to string
+    numberoftickets_string = str(numberoftickets)
+
+    # Combine numberoftickets_string and ticketids_string plus text into output variable
+    output = '  Tickets in view: ' + numberoftickets_string + ' Ticket ids: ' + ticketids_string
+
+    # Clear the pi output
+    scrollphathd.clear()
+
+    # Write output string to the pi buffer
+    scrollphathd.write_string(output, brightness=0.5)
+
+    # Call the autoscroll function that will send the pi buffer to the led screen
+    autoscroll()
+
+    # Sleep for duration of poll_interval to rate limit api access
     time.sleep(poll_interval)
