@@ -25,6 +25,8 @@ view = '{redacted}'
 url = '{redacted}'
 
 # Polling interval (seconds). Zendesk rate limits: https://developer.zendesk.com/rest_api/docs/core/introduction#rate-limits
+# Since time.sleep(poll_interval) is used twice, the timeout / sleep time is twice poll_interval.
+# So a value of 10 here means the timeout is 20 seconds, which is an api access rate of 3 times per minute.
 poll_interval = 10
 
 # define global variable "data" for use in "GetResponse" function
@@ -130,7 +132,7 @@ while True:
     # Clear the pi output
     scrollphathd.clear()
 
-    # Watch a queue - if its empty do nothing. If there more than one ticket, output to led screen
+    # Watch a queue - if its empty do nothing. If there more than one ticket, output to pi buffer
     if numberoftickets > 0:
 
         # Write output string to the pi buffer
