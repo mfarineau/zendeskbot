@@ -39,6 +39,8 @@ ticketids = []
 # set a variable to ensure the autoscroll function is only called once
 scroll_limit = 0
 
+BRIGHTNESS = 0.3
+
 ##################
 # api connection #
 ##################
@@ -166,7 +168,7 @@ while True:
             current_pixel = min(seconds_progress, 1)
 
             # Multiply the pixel brightness (0.0 to 1.0) by our global brightness value
-            scrollphathd.set_pixel(y + 1, 6, current_pixel * brightness=0.3)
+            scrollphathd.set_pixel(y + 1, 6, current_pixel * BRIGHTNESS)
 
             # Subtract 1 now we've drawn that pixel
             seconds_progress -= 1
