@@ -6,6 +6,7 @@ import threading
 import scrollphathd
 from scrollphathd.fonts import font3x5
 from credentials import *
+import math
 
 scrollphathd.rotate(degrees=180)
 
@@ -141,7 +142,14 @@ while True:
 
     if numberoftickets == 0:
 
-        scrollphathd.write_string(" Tickets: 0 ", font=font3x5, y=1, brightness=0.2)
+        i += 2
+        s = math.sin(i / 50.0) * 2.0 + 6.0
+
+        for x in range(0, 17):
+            for y in range(0, 7):
+                v = 0.3 + (0.3 * math.sin((x * s) + i / 4.0) * math.cos((y * s) + i / 4.0))
+
+                scrollphathd.pixel(x, y, v)
 
     # Call the autoscroll function that will send the pi buffer to the led screen, but make sure it only runs once
     while scroll_limit < 1:
