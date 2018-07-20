@@ -30,8 +30,8 @@ url
 # So a value of 10 here means the timeout is 20 secondss, which is an api access rate of 3 times per minute.
 poll_interval = 10
 
-# define global variable "critdata" for use in "GetResponse" function
-critdata = 'null'
+# define global variable "data" for use in "GetResponse" function
+data = 'null'
 
 # define a global array to store ticket ids
 ticketids = []
@@ -43,20 +43,17 @@ scroll_limit = 0
 # api connection #
 ##################
 
-# Create a function to connect to the Zendesk api, get critdata and store it in a global variable
+# Create a function to connect to the Zendesk api, get data and store it in a global variable
 def GetResponse():
 
-    # Build out the zendesk api connection with user creds and ask zendesk for view critdata:
-    critresponse = requests.get(url + '/views/' + critview + '/tickets.json', auth=(email + '/token', token))
-    ungrabbed = requests.get(url + '/views/' + ungrabbedview + '/tickets.json', auth=(email + '/token', token))
-
+    # Build out the zendesk api connection with user creds and ask zendesk for view data:
+    response = requests.get(url + '/views/' + view + '/tickets.json', auth=(email + '/token', token))
 
     # grab global variable
-    global critdata
-    global ungrabbeddata
+    global data
 
-    # Store critdata in json format in global variable:
-    critdata = critresponse.json()
+    # Store data in json format in global variable:
+    data = response.json()
     time.sleep(poll_interval)
     PrintParse()
 
@@ -70,22 +67,22 @@ def autoscroll(interval=0.05):
 ########################
 
 # Create a loop that:
-#   - gets critdata from a global variable
-#   - examines critdata to grab:
+#   - gets data from a global variable
+#   - examines data to grab:
 #       - number of tickets in the view
 #       - ticket numbers
 
 def PrintParse():
 
-    # Call the "GetResponse" function to pull critdata from Zendesk
+    # Call the "GetResponse" function to pull data from Zendesk
     #GetResponse()
 
-    # extracting number of tickets from critdata:
+    # extracting number of tickets from data:
     global numberoftickets
-    numberoftickets = critdata[u'count']
+    numberoftickets = data[u'count']
 
     # extracting zendesk IDs for tickets (the [0] grabs the first ticket ID, [1] would grab the next and so on)
-    # ticketids = critdata[u'tickets'][0][u'id']
+    # ticketids = data[u'tickets'][0][u'id']
 
     # setup a loop to iterate through open tickets and print them when there are tickets to print
     i = 0
@@ -95,7 +92,7 @@ def PrintParse():
 
         # add tickets to ticketids array
         # zendesk IDs for tickets ([0] is the first ticket, [1] would grab the next and so on)
-        ticketids.append(critdata[u'tickets'][i][u'id'])
+        ticketids.append(data[u'tickets'][i][u'id'])
 
         # increase value of i by 1
         i += 1
@@ -131,7 +128,7 @@ while True:
     numberoftickets_string = str(numberoftickets)
 
     # Combine numberoftickets_string and ticketids_string plus text into output variable
-    critoutput = '  Tickets: ' + numberoftickets_string + ' IDs: ' + ticketids_string
+    output = '  Tickets: ' + numberoftickets_string + ' IDs: ' + ticketids_string
 
     # Clear the pi output
     scrollphathd.clear()
@@ -140,11 +137,11 @@ while True:
     if numberoftickets > 0:
 
         # Write output string to the pi buffer
-        scrollphathd.write_string(critoutput, font=font3x5, y=1, brightness=0.5)
+        scrollphathd.write_string(output, font=font3x5, y=1, brightness=0.5)
 
     if numberoftickets == 0:
 
-        scrollphathd.clear_rect(8, 0, 1, 5)
+        scrollphathd.write_string("0 Tickets", font=font3x5, y=1, brightness=0.5)
 
     # Call the autoscroll function that will send the pi buffer to the led screen, but make sure it only runs once
     while scroll_limit < 1:
