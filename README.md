@@ -10,3 +10,5 @@ For this project, you'll need:
 * A Zendesk Token
 * A fully built [Pimoroni Scroll Bot](https://shop.pimoroni.com/products/scroll-bot-pi-zero-w-project-kit)
 * A Python IDE (if you want to change anything or test things out). I use [PyCharm](https://www.jetbrains.com/pycharm/)
+
+Before use, copy the  to 'example.credentials.py` to `credentials.py` and add in your zendesk credentials.

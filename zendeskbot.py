@@ -5,6 +5,7 @@ import time
 import threading
 import scrollphathd
 from scrollphathd.fonts import font3x5
+from credentials import *
 
 scrollphathd.rotate(degrees=180)
 
@@ -13,20 +14,20 @@ scrollphathd.rotate(degrees=180)
 ####################
 
 # Enter your Zendesk email:
-email = '{redacted}'
+email
 
 # Enter your Zendesk token:
-token = '{redacted}'
+token
 
 # Enter the view you are connecting to:
-view = '{redacted}'
+view
 
 # Enter the Zendesk API url
-url = '{redacted}'
+url
 
 # Polling interval (seconds). Zendesk rate limits: https://developer.zendesk.com/rest_api/docs/core/introduction#rate-limits
 # Since time.sleep(poll_interval) is used twice, the timeout / sleep time is twice poll_interval.
-# So a value of 10 here means the timeout is 20 seconds, which is an api access rate of 3 times per minute.
+# So a value of 10 here means the timeout is 20 secondss, which is an api access rate of 3 times per minute.
 poll_interval = 10
 
 # define global variable "data" for use in "GetResponse" function
