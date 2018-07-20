@@ -39,6 +39,8 @@ ticketids = []
 # set a variable to ensure the autoscroll function is only called once
 scroll_limit = 0
 
+float_sec = (time.time() % 60) / 59.0
+
 seconds_progress = float_sec * 15
 
 ##################
