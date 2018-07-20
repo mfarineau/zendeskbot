@@ -9,7 +9,8 @@ email = ''
 token = ''
 
 # Enter the view you are connecting to:
-view = ''
+critview = ''
+ungrabbedview = ''
 
 # Enter the Zendesk API url.
 # Example: 'https://company.zendesk.com/api/v2'
