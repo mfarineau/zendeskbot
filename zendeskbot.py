@@ -143,7 +143,7 @@ while True:
 
     if numberoftickets == 0:
 
-        scrollphathd.set_pixel(int(seconds_progress), 6, BRIGHTNESS)
+        scrollphathd.set_pixel(int(seconds_progress), 6, brightness=0.3)
 
 
     # Call the autoscroll function that will send the pi buffer to the led screen, but make sure it only runs once
