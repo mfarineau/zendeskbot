@@ -141,7 +141,7 @@ while True:
         scrollphathd.write_string(output, font=font3x5, y=1, brightness=0.5)
 
     if numberoftickets == 0:
-
+        i = 0
         i += 2
         s = math.sin(i / 50.0) * 2.0 + 6.0
 
