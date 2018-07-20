@@ -139,6 +139,11 @@ while True:
         # Write output string to the pi buffer
         scrollphathd.write_string(output, font=font3x5, y=1, brightness=0.5)
 
+    if numberoftickets == 0:
+
+        scrollphathd.set_pixel(int(seconds_progress), 6, BRIGHTNESS)
+
+
     # Call the autoscroll function that will send the pi buffer to the led screen, but make sure it only runs once
     while scroll_limit < 1:
         autoscroll()
