@@ -140,7 +140,7 @@ while True:
         # Write output string to the pi buffer
         scrollphathd.write_string(output, font=font3x5, y=1, brightness=0.5)
 
-    if numberoftickets == 0:
+    #if numberoftickets == 0:
 
         # Saving this section for an action when there are zero ungrabbed crits
 
