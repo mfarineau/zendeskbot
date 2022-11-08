@@ -1,6 +1,6 @@
 # zendeskbot
 
-***Note: This project is under acive development and is not yet complete***
+***Note: I no longer actively use Zendesk and am not planning to maintain this project***
 
 This is a simple project meant to pull data in from the Zendesk API and push to an LED screen. This was developed in Python. Hardware is the Pimoroni Scroll Bot kit: https://shop.pimoroni.com/products/scroll-bot-pi-zero-w-project-kit
 
